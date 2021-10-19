@@ -17,11 +17,11 @@ jobs:
     steps:
       - name: Show current date
         run: |
-          echo date
+          date
   list_directories:
     runs-on: ubuntu-18.04
     steps:
       - name: Show current directory
         run: |
-          echo ls
+          ls
         
