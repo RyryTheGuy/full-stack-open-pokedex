@@ -3,25 +3,28 @@ name: Hello World!
 on:
   push:
     branches:
-      - master
+      - new-feature
 
 jobs:
-  hello_world_job:
-    runs-on: ubuntu-18.04
-    steps: 
-      - name: Say hello
-        run: |
-          echo "Hello World!"
-  display_date:
+  a_test_job:
     runs-on: ubuntu-18.04
     steps:
-      - name: Show current date
-        run: |
-          date
-  list_directories:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Show current directory
-        run: |
-          ls
+      - uses: actions/checkout@v2
+      - name: github context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+      - name: commits
+        env:
+          COMMITS: ${{ toJson(github.event.commits) }}
+        run: echo "$COMMITS"
+      - name: commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+        run: echo "$COMMIT_MESSAGES"
+      - name: should be skipped
+        if: ${{ !contains(join(github.event.commits.*.message, ' '), '#skip') }}
+        env:
+          COMMIT_MESSAGE: ${{ contains(join(github.event.commits.*.message, ' '), '#skip') }}
+        run: echo "$COMMIT_MESSAGE"
         
